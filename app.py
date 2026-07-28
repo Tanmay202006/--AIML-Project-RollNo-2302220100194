@@ -87,4 +87,4 @@ with st.form("salary_form"):
 
 if submitted:
     predicted_salary = predict_salary(age, experience, gender, education, job_title)
-    st.success(f"Estimated Salary: ${predicted_salary:,.0f}")
+    st.success(f"Estimated Salary:  ₹{predicted_salary:,.0f}")
