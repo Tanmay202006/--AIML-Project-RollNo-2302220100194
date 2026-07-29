@@ -146,8 +146,46 @@ def evaluate_model(df):
 
 
 st.set_page_config(page_title="Salary Predictor", page_icon="💼", layout="wide")
-st.title("Salary Prediction App")
-st.write("Estimate salaries with a trained regression model and explore the dataset through interactive charts.")
+
+st.markdown(
+    """
+    <style>
+    .hero {
+        background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+        padding: 1.4rem 1.6rem;
+        border-radius: 16px;
+        color: white;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+    }
+    .subcard {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    .stTabs [role="tablist"] {
+        gap: 0.5rem;
+    }
+    .stTabs [role="tab"] {
+        border-radius: 10px;
+        padding: 0.4rem 0.8rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+    <div class="hero">
+        <h1 style="margin:0;">Salary Prediction App</h1>
+        <p style="margin:0.3rem 0 0 0;">Estimate salaries with a trained model and explore the dataset through polished visuals.</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 salary_data = load_salary_data()
 
@@ -155,6 +193,7 @@ prediction_tab, eda_tab, performance_tab = st.tabs(["Prediction", "EDA", "Model 
 
 with prediction_tab:
     st.subheader("Predict a Salary")
+    st.markdown('<div class="subcard">Fill in your details and get an instant salary estimate.</div>', unsafe_allow_html=True)
     with st.form("salary_form"):
         age = st.number_input("Age", min_value=18, max_value=80, value=35)
         experience = st.number_input("Years of Experience", min_value=0, max_value=40, value=5)
@@ -169,45 +208,29 @@ with prediction_tab:
 
 with eda_tab:
     st.subheader("Exploratory Data Analysis")
-    st.caption("These charts help you understand how salary changes across experience, education, and gender.")
+    st.caption("These notebook-generated visuals highlight how salary varies by experience, education, and role.")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        experience_summary = salary_data.groupby("Years of Experience")["Salary"].mean().reset_index()
-        experience_summary = experience_summary.sort_values("Years of Experience")
-        st.write("Average Salary by Experience")
-        st.line_chart(experience_summary.set_index("Years of Experience"))
-
-    with col2:
-        education_summary = salary_data.groupby("Education Level")["Salary"].mean().sort_values(ascending=False)
-        st.write("Average Salary by Education Level")
-        st.bar_chart(education_summary)
-
-    col3, col4 = st.columns(2)
-    with col3:
-        gender_summary = salary_data.groupby("Gender")["Salary"].mean().sort_values(ascending=False)
-        st.write("Average Salary by Gender")
-        st.bar_chart(gender_summary)
-
-    with col4:
-        title_counts = salary_data["Job Title"].value_counts().head(10)
-        st.write("Top Job Titles in the Dataset")
-        st.bar_chart(title_counts)
+    image_col1, image_col2 = st.columns(2)
+    with image_col1:
+        st.image(PROJECT_ROOT / "Images" / "salary_distribution.png", caption="Salary Distribution", use_container_width=True)
+        st.image(PROJECT_ROOT / "Images" / "experience_vs_salary.png", caption="Experience vs Salary", use_container_width=True)
+    with image_col2:
+        st.image(PROJECT_ROOT / "Images" / "salary_by_edu_gender.png", caption="Salary by Education and Gender", use_container_width=True)
+        st.image(PROJECT_ROOT / "Images" / "top_paying_jobs.png", caption="Top Paying Jobs", use_container_width=True)
 
 with performance_tab:
     st.subheader("Model Performance")
     st.caption("The model is evaluated on a held-out test set using standard regression metrics.")
 
-    metrics, comparison_df = evaluate_model(salary_data)
+    metrics, _ = evaluate_model(salary_data)
 
     metric_cols = st.columns(3)
     metric_cols[0].metric("R² Score", f"{metrics['R²']}")
     metric_cols[1].metric("MAE", f"${metrics['MAE']:,.0f}")
     metric_cols[2].metric("RMSE", f"${metrics['RMSE']:,.0f}")
 
-    st.write("Actual vs Predicted Salary")
-    st.scatter_chart(comparison_df, x="Actual Salary", y="Predicted Salary")
-
-    performance_summary = pd.DataFrame({"Metric": ["R² Score", "MAE", "RMSE"], "Value": [metrics["R²"], metrics["MAE"], metrics["RMSE"]]}).set_index("Metric")
-    st.write("Metric Comparison")
-    st.bar_chart(performance_summary)
+    image_col1, image_col2 = st.columns(2)
+    with image_col1:
+        st.image(PROJECT_ROOT / "Images" / "predicted_vs_actual.png", caption="Predicted vs Actual Salary", use_container_width=True)
+    with image_col2:
+        st.image(PROJECT_ROOT / "Images" / "r2_comparison.png", caption="R² Comparison", use_container_width=True)
