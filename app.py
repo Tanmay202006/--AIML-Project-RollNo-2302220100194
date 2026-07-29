@@ -165,7 +165,7 @@ with prediction_tab:
 
     if submitted:
         predicted_salary = predict_salary(age, experience, gender, education, job_title)
-        st.success(f"Estimated Salary: ₹{predicted_salary:,.0f}")
+        st.success(f"Estimated Salary: ${predicted_salary:,.0f}")
 
 with eda_tab:
     st.subheader("Exploratory Data Analysis")
@@ -202,8 +202,8 @@ with performance_tab:
 
     metric_cols = st.columns(3)
     metric_cols[0].metric("R² Score", f"{metrics['R²']}")
-    metric_cols[1].metric("MAE", f"₹{metrics['MAE']:,.0f}")
-    metric_cols[2].metric("RMSE", f"₹{metrics['RMSE']:,.0f}")
+    metric_cols[1].metric("MAE", f"${metrics['MAE']:,.0f}")
+    metric_cols[2].metric("RMSE", f"${metrics['RMSE']:,.0f}")
 
     st.write("Actual vs Predicted Salary")
     st.scatter_chart(comparison_df, x="Actual Salary", y="Predicted Salary")
