@@ -193,7 +193,7 @@ prediction_tab, eda_tab, performance_tab = st.tabs(["Prediction", "EDA", "Model 
 
 with prediction_tab:
     st.subheader("Predict a Salary")
-    st.markdown('<div class="subcard">Fill in your details and get an instant salary estimate.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subcard" style="color: black;">Fill in your details and get an instant salary estimate.</div>', unsafe_allow_html=True)
     with st.form("salary_form"):
         age = st.number_input("Age", min_value=18, max_value=80, value=35)
         experience = st.number_input("Years of Experience", min_value=0, max_value=40, value=5)
